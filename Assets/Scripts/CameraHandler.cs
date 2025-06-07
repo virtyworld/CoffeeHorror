@@ -8,7 +8,6 @@ public class CameraHandler : MonoBehaviour
     [SerializeField] private Transform playerBody;
 
     private float xRotation = 0f;
-    private float yRotation = 0f;
 
     private void Start()
     {
@@ -21,31 +20,11 @@ public class CameraHandler : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
-        // Handle Y rotation (left/right)
-        yRotation += mouseX;
+        // Handle camera up/down rotation
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        if (yRotation > 90f)
-        {
-            float excessRotation = yRotation - 90f;
-            yRotation = 90f;
-            playerBody.Rotate(Vector3.up * excessRotation);
-        }
-        else if (yRotation < -90f)
-        {
-            float excessRotation = yRotation + 90f;
-            yRotation = -90f;
-            playerBody.Rotate(Vector3.up * excessRotation);
-        }
-
-        // Handle X rotation (up/down)
-        float nextXRotation = xRotation - mouseY;
-
-        if (nextXRotation <= 65f && nextXRotation >= -90f)
-        {
-            xRotation = nextXRotation;
-        }
-
-        // Apply rotations
-        camera.transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        // Apply camera rotation
+        camera.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 }
