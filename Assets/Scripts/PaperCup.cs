@@ -19,7 +19,7 @@ public class PaperCup : MonoBehaviour
     public Vector3 TubeBasePosition { get; private set; } = new Vector3(-0.08791149f, 6.94942f, 1.113803f);
     public Vector3 TubeRotatedPosition { get; private set; } = new Vector3(2.206f, 0.684f, 89.387f);
     private Vector3 initialCoffeeScale = new Vector3(0.01550759f, 0.002295122f, 0.01550758f);
-    private Vector3 targetCoffeeScale = new Vector3(0.01974426f, 0.002922148f, 0.01974424f);
+    private Vector3 targetCoffeeScale = new Vector3(0.0185f, 0.002922148f, 0.0185f);
     private Vector3 initialCoffeePosition = new Vector3(0f, 0f, -0.00962f);
     private Vector3 targetCoffeePosition = new Vector3(0, 0f, 0.0155f);
     private float coffeeChangeDuration = 10f;

@@ -31,6 +31,7 @@ public class Cap : MonoBehaviour
 
             if (isMovingUp)
             {
+                sfx.PlayPaperPlaceSound();
                 // First move up
                 Vector3 raisedPosition = initialPosition + Vector3.up * 0.1f;
                 transform.position = Vector3.Lerp(initialPosition, raisedPosition, attachmentProgress);
@@ -43,7 +44,7 @@ public class Cap : MonoBehaviour
             }
             else
             {
-                sfx.PlayPaperPlaceSound();
+
                 // Then move to final position
                 transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * attachSpeed);
                 transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * attachSpeed);
