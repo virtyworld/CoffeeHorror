@@ -6,6 +6,7 @@ public class PaperCup : MonoBehaviour
     [SerializeField] private GameObject paperCup;
     [SerializeField] private GameObject coffee;
     [SerializeField] public Transform SnapPoint;
+    [SerializeField] private SFX sfx;
 
     private Material cupMaterial;
     private MeshRenderer coffeeMeshRenderer;
@@ -56,13 +57,12 @@ public class PaperCup : MonoBehaviour
             yield break;
         }
         isCofeeInProgress = true;
-        Debug.Log("Setting initial coffee state");
+
         coffee.transform.localScale = initialCoffeeScale;
         coffee.transform.localPosition = initialCoffeePosition;
         EnableCoffee();
 
         float elapsedTime = 0f;
-        Debug.Log($"Starting coffee animation. Duration: {coffeeChangeDuration}");
 
         while (elapsedTime < coffeeChangeDuration)
         {
@@ -94,7 +94,7 @@ public class PaperCup : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log("Coffee animation completed");
+
         isCoffeeDone = true;
         isCofeeInProgress = false;
     }
@@ -106,6 +106,7 @@ public class PaperCup : MonoBehaviour
         {
             Debug.Log("StartCoffeeChange2");
             StartCoroutine(ChangeCoffeeCoroutine());
+            sfx.PlayCoffeeDreepSound();
         }
     }
 

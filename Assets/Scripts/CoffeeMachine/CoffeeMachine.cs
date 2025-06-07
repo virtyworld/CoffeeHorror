@@ -5,6 +5,7 @@ public class CoffeeMachine : StateMachine<CoffeeMachine.CoffeeMachineState>
     [SerializeField] private CofeeMachineCupChecker cupChecker;
     [SerializeField] private MeshRenderer lamp;
     [SerializeField] private float workingTime = 10f; // Время работы кофемашины в секундах
+    [SerializeField] private SFX sfx;
 
     private float workingTimer;
     private bool isWorking;
@@ -70,6 +71,10 @@ public class CoffeeMachine : StateMachine<CoffeeMachine.CoffeeMachineState>
         SetLampColor(Color.red);
         isWorking = false;
         workingTimer = 0f;
+        if (sfx != null)
+        {
+            sfx.StopCoffeeMachineSound();
+        }
     }
 
     // Обработка состояния "Работает"
@@ -79,6 +84,10 @@ public class CoffeeMachine : StateMachine<CoffeeMachine.CoffeeMachineState>
         SetLampColor(Color.green);
         isWorking = true;
         workingTimer = 0f;
+        if (sfx != null)
+        {
+            sfx.PlayCoffeeMachineSound();
+        }
         StartCreatingCoffee();
     }
 

@@ -3,6 +3,7 @@ using UnityEngine;
 public class Cap : MonoBehaviour
 {
     [SerializeField] private PlayerInteraction playerInteraction;
+    [SerializeField] private SFX sfx;
 
     private PaperCup targetCup;
     private bool isAttaching = false;
@@ -42,6 +43,7 @@ public class Cap : MonoBehaviour
             }
             else
             {
+                sfx.PlayPaperPlaceSound();
                 // Then move to final position
                 transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * attachSpeed);
                 transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * attachSpeed);

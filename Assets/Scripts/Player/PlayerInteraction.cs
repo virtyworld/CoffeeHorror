@@ -12,6 +12,7 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private TextMeshProUGUI interactionText;
     [SerializeField] private float throwForce = 10f;
     [SerializeField] private Money money;
+    [SerializeField] private SFX sfx;
 
     private GameObject heldObject;
     private bool isHoldingObject;
@@ -70,6 +71,7 @@ public class PlayerInteraction : MonoBehaviour
                         heldObject.transform.SetParent(holdPoint.transform);
                         heldObject.transform.rotation = Quaternion.Euler(-90f, 0f, 0f);
                         isHoldingObject = true;
+                        sfx.PlayPaperCollectSound();
                     }
 
 
@@ -91,7 +93,7 @@ public class PlayerInteraction : MonoBehaviour
                     heldObject.transform.position = new Vector3(heldObject.transform.position.x, 0.385f, heldObject.transform.position.z);
                     heldObject.transform.rotation = Quaternion.Euler(-90f, 0f, 0f);
                     isHoldingObject = false;
-                    Debug.Log(heldObject.tag);
+
                     if (heldObject.CompareTag("Glass"))
                     {
                         Debug.Log("Glass");
@@ -119,6 +121,7 @@ public class PlayerInteraction : MonoBehaviour
                     heldObject.GetComponent<Rigidbody>().isKinematic = true;
                     heldObject.GetComponent<BoxCollider>().enabled = false;
                     isHoldingObject = true;
+                    sfx.PlayPaperCollectSound();
                 }
             }
             else if (hit.collider.CompareTag("StartCoffeeButton") && !isHoldingObject)
@@ -217,6 +220,7 @@ public class PlayerInteraction : MonoBehaviour
                     if (money != null)
                     {
                         money.ShowMoneyText("100", hit.point);
+                        sfx.PlayCoinsSound();
                     }
                 }
             }
