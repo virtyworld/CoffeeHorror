@@ -7,6 +7,8 @@ public class SFX : MonoBehaviour
     [SerializeField] private AudioSource paperCollectSFX;
     [SerializeField] private AudioSource capAttachSFX;
     [SerializeField] private AudioSource coinsSFX;
+    [SerializeField] private AudioSource lightSwitchOnSFX;
+    [SerializeField] private AudioSource lightSwitchOffSFX;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -79,6 +81,20 @@ public class SFX : MonoBehaviour
         if (coinsSFX != null)
         {
             coinsSFX.Play();
+        }
+    }
+    public void PlayLightSwitchOnSound()
+    {
+        if (lightSwitchOnSFX != null)
+        {
+            lightSwitchOnSFX.Play();
+        }
+    }
+    public void PlayLightSwitchOffSound()
+    {
+        if (lightSwitchOffSFX != null)
+        {
+            lightSwitchOffSFX.Play();
         }
     }
 }

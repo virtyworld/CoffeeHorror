@@ -1,16 +1,45 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameHandler : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private LightSwitcher lightSwitcher;
+    [SerializeField] private GuestReplacer guestReplacer;
+    [SerializeField] private PlayerInteraction playerInteraction;
+    private UnityEvent onPlayerSwitchingLight;
+    private UnityEvent onTurnOffLight;
+    private UnityEvent onTurnAllLightsRed;
+    private UnityEvent onTurnAllLightsWhite;
+    void Awake()
     {
-        
+        InitEvents();
+        InitLightSwitcher();
+        InitGuestReplacer();
+        InitPlayerInteraction();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void InitEvents()
     {
-        
+        Debug.Log("InitEvents");
+        onPlayerSwitchingLight = new UnityEvent();
+        onTurnOffLight = new UnityEvent();
+        onTurnAllLightsRed = new UnityEvent();
+        onTurnAllLightsWhite = new UnityEvent();
     }
+
+    private void InitLightSwitcher()
+    {
+        lightSwitcher.Setup(onTurnOffLight, onTurnAllLightsRed, onTurnAllLightsWhite);
+    }
+
+    private void InitGuestReplacer()
+    {
+        guestReplacer.Setup(onPlayerSwitchingLight, onTurnOffLight, onTurnAllLightsRed, onTurnAllLightsWhite);
+    }
+
+    private void InitPlayerInteraction()
+    {
+        playerInteraction.Setup(onPlayerSwitchingLight);
+    }
+
 }

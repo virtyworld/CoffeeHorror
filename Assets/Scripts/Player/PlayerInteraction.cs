@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Events;
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -13,9 +14,11 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private float throwForce = 10f;
     [SerializeField] private Money money;
     [SerializeField] private SFX sfx;
+    [SerializeField] private LightSwitcher lightSwitcher;
 
     private GameObject heldObject;
     private bool isHoldingObject;
+    private UnityEvent onPlayerSwitchingLight;
 
     public GameObject HeldObject
     {
@@ -26,6 +29,11 @@ public class PlayerInteraction : MonoBehaviour
     {
         get { return isHoldingObject; }
         set { isHoldingObject = value; }
+    }
+
+    public void Setup(UnityEvent onPlayerSwitchingLight)
+    {
+        this.onPlayerSwitchingLight = onPlayerSwitchingLight;
     }
     private void Start()
     {
@@ -39,7 +47,7 @@ public class PlayerInteraction : MonoBehaviour
             Debug.LogError("Money component is not assigned in PlayerInteraction!");
         }
     }
-
+    // "lightSwitcher.IsTurnedOn" (it's check is it dark or not)we can't use anything except light switcher in the dark
     private void Update()
     {
         RaycastHit hit;
@@ -49,8 +57,15 @@ public class PlayerInteraction : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, rayDistance))
         {
-            if (hit.collider.CompareTag("Untagged")) return;
-            if (hit.collider.CompareTag("Glass") && !isHoldingObject)
+            if (hit.collider.CompareTag("Untagged"))
+            {
+                if (interactionText != null)
+                {
+                    panelWithText.SetActive(false);
+                }
+                return;
+            }
+            if (hit.collider.CompareTag("Glass") && !isHoldingObject && lightSwitcher.IsTurnedOn)
             {
                 if (interactionText != null)
                 {
@@ -62,7 +77,7 @@ public class PlayerInteraction : MonoBehaviour
                 {
                     heldObject = hit.collider.gameObject;
 
-                    if (!heldObject.GetComponent<PaperCup>().isCofeeInProgress)
+                    if (!heldObject.GetComponent<PaperCup>().isCofeeInProgress && lightSwitcher.IsTurnedOn)
                     {
                         heldObject.GetComponent<Rigidbody>().isKinematic = true;
                         heldObject.GetComponent<BoxCollider>().enabled = false;
@@ -77,7 +92,7 @@ public class PlayerInteraction : MonoBehaviour
 
                 }
             }
-            else if (hit.collider.CompareTag("Place") && isHoldingObject)
+            else if (hit.collider.CompareTag("Place") && isHoldingObject && lightSwitcher.IsTurnedOn)
             {
                 if (interactionText != null)
                 {
@@ -85,7 +100,7 @@ public class PlayerInteraction : MonoBehaviour
                     interactionText.text = "Place";
                 }
 
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKeyDown(KeyCode.E) && lightSwitcher.IsTurnedOn)
                 {
                     heldObject.GetComponent<Rigidbody>().isKinematic = false;
                     heldObject.transform.SetParent(null);
@@ -102,7 +117,7 @@ public class PlayerInteraction : MonoBehaviour
                     heldObject = null;
                 }
             }
-            else if (hit.collider.CompareTag("Cap") && !isHoldingObject)
+            else if (hit.collider.CompareTag("Cap") && !isHoldingObject && lightSwitcher.IsTurnedOn)
             {
                 if (interactionText != null)
                 {
@@ -124,7 +139,7 @@ public class PlayerInteraction : MonoBehaviour
                     sfx.PlayPaperCollectSound();
                 }
             }
-            else if (hit.collider.CompareTag("StartCoffeeButton") && !isHoldingObject)
+            else if (hit.collider.CompareTag("StartCoffeeButton") && !isHoldingObject && lightSwitcher.IsTurnedOn)
             {
                 if (interactionText != null)
                 {
@@ -139,7 +154,7 @@ public class PlayerInteraction : MonoBehaviour
                     panelWithText.SetActive(false);
                 }
             }
-            else if (hit.collider.CompareTag("Cap") && isHoldingObject)
+            else if (hit.collider.CompareTag("Cap") && isHoldingObject && lightSwitcher.IsTurnedOn)
             {
                 if (interactionText != null)
                 {
@@ -167,6 +182,27 @@ public class PlayerInteraction : MonoBehaviour
                 heldObject.transform.rotation = Quaternion.Euler(-90f, 0f, 0f);
                 isHoldingObject = true;
             }
+            else if (hit.collider.CompareTag("Lights"))
+            {
+                if (interactionText != null)
+                {
+                    panelWithText.SetActive(true);
+                    if (lightSwitcher.IsTurnedOn)
+                    {
+                        interactionText.text = "Turn off the lights";
+                    }
+                    else
+                    {
+                        interactionText.text = "Turn on the lights";
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    onPlayerSwitchingLight.Invoke();
+                    lightSwitcher.SwitchLight();
+                    panelWithText.SetActive(false);
+                }
+            }
             else
             {
                 if (interactionText != null)
@@ -184,8 +220,6 @@ public class PlayerInteraction : MonoBehaviour
         }
         ThrowLogic();
         CupStateChecker();
-
-
     }
 
     private void ThrowLogic()
@@ -223,6 +257,13 @@ public class PlayerInteraction : MonoBehaviour
                         sfx.PlayCoinsSound();
                     }
                 }
+            }
+        }
+        else
+        {
+            if (interactionText != null)
+            {
+                panelWithText.SetActive(false);
             }
         }
     }
