@@ -11,6 +11,7 @@ TagManager:
   - StartCoffeeButton
   - Client
   - Lights
+  - Surface
   layers:
   - Default
   - TransparentFX

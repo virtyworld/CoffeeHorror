@@ -8,6 +8,7 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private PlayerInteraction playerInteraction;
     [SerializeField] private Music music;
     [SerializeField] private SFX sfx;
+    [SerializeField] private CoffeeMachine coffeeMachine;
 
 
     private UnityEvent onPlayerSwitchingLight;
@@ -20,6 +21,7 @@ public class GameHandler : MonoBehaviour
     private UnityEvent onMusicValueDown;
     private UnityEvent onCafeNoiseVolumeUp;
     private UnityEvent onCafeNoiseVolumeDown;
+    private UnityEvent onPlayerTurnOnCoffeeMachine;
 
     void Awake()
     {
@@ -29,6 +31,7 @@ public class GameHandler : MonoBehaviour
         InitPlayerInteraction();
         InitMusic();
         InitSFX();
+        InitCoffeeMachine();
     }
 
     private void InitEvents()
@@ -43,6 +46,7 @@ public class GameHandler : MonoBehaviour
         onMusicValueDown = new UnityEvent();
         onCafeNoiseVolumeUp = new UnityEvent();
         onCafeNoiseVolumeDown = new UnityEvent();
+        onPlayerTurnOnCoffeeMachine = new UnityEvent();
     }
 
     private void InitLightSwitcher()
@@ -54,7 +58,7 @@ public class GameHandler : MonoBehaviour
     {
         scenaryHandler.Setup(onMusicValueUp, onMusicValueDown, onTurnOnRelaxMusic, onTurnOffRelaxMusic,
         onCafeNoiseVolumeUp, onCafeNoiseVolumeDown, onPlayerSwitchingLight, onTurnOffLight, onTurnAllLightsRed,
-        onTurnAllLightsWhite);
+        onTurnAllLightsWhite, onPlayerTurnOnCoffeeMachine);
     }
 
     private void InitPlayerInteraction()
@@ -70,6 +74,11 @@ public class GameHandler : MonoBehaviour
     private void InitSFX()
     {
         sfx.Setup(onCafeNoiseVolumeUp, onCafeNoiseVolumeDown);
+    }
+
+    private void InitCoffeeMachine()
+    {
+        coffeeMachine.Setup(onPlayerTurnOnCoffeeMachine);
     }
 
 }

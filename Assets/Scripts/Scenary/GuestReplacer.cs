@@ -6,6 +6,7 @@ public class GuestReplacer : MonoBehaviour
 {
     [SerializeField] private GameObject[] normalObjects;
     [SerializeField] private GameObject[] scaryObjects;
+    [SerializeField] private AudioSource audioSource;
     private Coroutine replaceBackCoroutine;
     private UnityEvent onTurnOffLight;
     private UnityEvent onTurnAllLightsRed;
@@ -17,6 +18,8 @@ public class GuestReplacer : MonoBehaviour
     private UnityEvent onCafeNoiseVolumeUp;
     private UnityEvent onCafeNoiseVolumeDown;
     private bool isSceneStarted = false;
+    private bool isAlreadyDone = false;
+
     public void Setup(UnityEvent onPlayerSwitchingLight, UnityEvent onTurnOffLight, UnityEvent onTurnAllLightsRed,
     UnityEvent onTurnAllLightsWhite, UnityEvent onMusicValueUp, UnityEvent onMusicValueDown, UnityEvent onTurnOnRelaxMusic,
      UnityEvent onTurnOffRelaxMusic, UnityEvent onCafeNoiseVolumeUp, UnityEvent onCafeNoiseVolumeDown)
@@ -41,16 +44,19 @@ public class GuestReplacer : MonoBehaviour
     {
         isSceneStarted = true;
         onTurnOffLight.Invoke();
+        isAlreadyDone = false;
     }
     public void ActivateScenario()
     {
         if (!isSceneStarted) return;
+        if (isAlreadyDone) return;
         Debug.Log("StartLogic GuestReplacer");
         onTurnAllLightsRed.Invoke();
         onMusicValueUp.Invoke();
         onCafeNoiseVolumeDown.Invoke();
         onTurnOffRelaxMusic.Invoke();
         ReplaceGuests();
+        audioSource.Play();
         if (replaceBackCoroutine != null)
         {
             StopCoroutine(replaceBackCoroutine);
@@ -67,6 +73,7 @@ public class GuestReplacer : MonoBehaviour
         onMusicValueDown.Invoke();
         onCafeNoiseVolumeUp.Invoke();
         onTurnOnRelaxMusic.Invoke();
+        isAlreadyDone = true;
         ReplaceGuestsBack();
     }
 

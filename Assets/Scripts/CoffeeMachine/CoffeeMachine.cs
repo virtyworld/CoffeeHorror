@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CoffeeMachine : StateMachine<CoffeeMachine.CoffeeMachineState>
 {
@@ -10,10 +11,10 @@ public class CoffeeMachine : StateMachine<CoffeeMachine.CoffeeMachineState>
     private float workingTimer;
     private bool isWorking;
 
-
-    private void Start()
+    private UnityEvent onPlayerTurnOnCoffeeMachine;
+    public void Setup(UnityEvent onPlayerTurnOnCoffeeMachine)
     {
-
+        this.onPlayerTurnOnCoffeeMachine = onPlayerTurnOnCoffeeMachine;
     }
 
     // Enum для состояний кофемашины
@@ -81,6 +82,7 @@ public class CoffeeMachine : StateMachine<CoffeeMachine.CoffeeMachineState>
     private void HandleWorkingState()
     {
         Debug.Log("Кофемашина работает");
+        onPlayerTurnOnCoffeeMachine?.Invoke();
         SetLampColor(Color.green);
         isWorking = true;
         workingTimer = 0f;

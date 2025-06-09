@@ -15,7 +15,7 @@ public class CameraHandler : MonoBehaviour
         Cursor.visible = false;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;

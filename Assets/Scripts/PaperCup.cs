@@ -14,6 +14,7 @@ public class PaperCup : MonoBehaviour
     public bool IsTransparentCapEnabled { get; private set; } = false;
     public bool IsTransparentTube { get; private set; } = false;
     public bool IsTransparentTubeEnabled { get; private set; } = false;
+    public bool IsCoffeeDone { get; private set; } = false;
     public Vector3 CapBasePosition { get; private set; } = new Vector3(0, 0, 0.01647285f);
     public Vector3 CapRotatedPosition { get; private set; } = new Vector3(-90, 0, 0);
     public Vector3 TubeBasePosition { get; private set; } = new Vector3(-0.08791149f, 6.94942f, 1.113803f);
@@ -24,7 +25,6 @@ public class PaperCup : MonoBehaviour
     private Vector3 targetCoffeePosition = new Vector3(0, 0f, 0.0155f);
     private float coffeeChangeDuration = 10f;
     public bool isCofeeInProgress = false;
-    private bool isCoffeeDone = false;
     private BoxCollider boxCollider;
 
     void Start()
@@ -51,7 +51,7 @@ public class PaperCup : MonoBehaviour
             yield break;
         }
 
-        if (isCoffeeDone)
+        if (IsCoffeeDone)
         {
             Debug.Log("Coffee change already done");
             yield break;
@@ -95,14 +95,14 @@ public class PaperCup : MonoBehaviour
         }
 
 
-        isCoffeeDone = true;
+        IsCoffeeDone = true;
         isCofeeInProgress = false;
     }
 
     public void StartCoffeeChange()
     {
         Debug.Log("StartCoffeeChange");
-        if (coffee != null && !isCoffeeDone)
+        if (coffee != null && !IsCoffeeDone)
         {
             Debug.Log("StartCoffeeChange2");
             StartCoroutine(ChangeCoffeeCoroutine());

@@ -79,7 +79,7 @@ public class Cap : MonoBehaviour
                 if (collider.CompareTag("Glass"))
                 {
                     PaperCup cup = collider.GetComponent<PaperCup>();
-                    if (cup != null && cup.SnapPoint != null)
+                    if (cup != null && cup.SnapPoint != null && cup.IsCoffeeDone)
                     {
                         targetCup = cup;
                         targetPosition = cup.SnapPoint.position;

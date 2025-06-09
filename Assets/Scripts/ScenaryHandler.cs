@@ -6,6 +6,7 @@ public class ScenaryHandler : MonoBehaviour
 {
     [SerializeField] private GuestReplacer guestReplacers;
     [SerializeField] private BehindTheBack behindTheBack;
+    [SerializeField] private ThingsFromTheBack thingsFromTheBack;
     [SerializeField] private float timeBetweenScenarios = 60f; // Time in seconds between scenario changes
 
     private float scenarioTimer;
@@ -19,10 +20,12 @@ public class ScenaryHandler : MonoBehaviour
     private UnityEvent onTurnOffLight;
     private UnityEvent onTurnAllLightsRed;
     private UnityEvent onTurnAllLightsWhite;
+    private UnityEvent onPlayerTurnOnCoffeeMachine;
 
     public void Setup(UnityEvent onMusicValueUp, UnityEvent onMusicValueDown, UnityEvent onTurnOnRelaxMusic,
      UnityEvent onTurnOffRelaxMusic, UnityEvent onCafeNoiseVolumeUp, UnityEvent onCafeNoiseVolumeDown,
-     UnityEvent onPlayerSwitchingLight, UnityEvent onTurnOffLight, UnityEvent onTurnAllLightsRed, UnityEvent onTurnAllLightsWhite)
+     UnityEvent onPlayerSwitchingLight, UnityEvent onTurnOffLight, UnityEvent onTurnAllLightsRed, UnityEvent onTurnAllLightsWhite,
+     UnityEvent onPlayerTurnOnCoffeeMachine)
     {
         this.onMusicValueUp = onMusicValueUp;
         this.onMusicValueDown = onMusicValueDown;
@@ -34,6 +37,7 @@ public class ScenaryHandler : MonoBehaviour
         this.onTurnOffLight = onTurnOffLight;
         this.onTurnAllLightsRed = onTurnAllLightsRed;
         this.onTurnAllLightsWhite = onTurnAllLightsWhite;
+        this.onPlayerTurnOnCoffeeMachine = onPlayerTurnOnCoffeeMachine;
     }
     void Start()
     {
@@ -41,6 +45,7 @@ public class ScenaryHandler : MonoBehaviour
         behindTheBack.Setup(onMusicValueUp, onMusicValueDown, onTurnOnRelaxMusic, onTurnOffRelaxMusic, onCafeNoiseVolumeUp, onCafeNoiseVolumeDown);
         guestReplacers.Setup(onPlayerSwitchingLight, onTurnOffLight, onTurnAllLightsRed, onTurnAllLightsWhite,
         onMusicValueUp, onMusicValueDown, onTurnOnRelaxMusic, onTurnOffRelaxMusic, onCafeNoiseVolumeUp, onCafeNoiseVolumeDown);
+        thingsFromTheBack.Setup(onPlayerTurnOnCoffeeMachine);
 
     }
 
@@ -62,14 +67,12 @@ public class ScenaryHandler : MonoBehaviour
 
         if (randomScenario == 0)
         {
-            Debug.Log("StartLogic GuestReplacer");
             guestReplacers.StartLogic();
         }
         else
         {
-            // Reset and activate the behind the back scenario
-            Debug.Log("StartLogic BehindTheBack");
-            behindTheBack.StartLogic();
+            thingsFromTheBack.StartLogic();
+            // behindTheBack.StartLogic();
         }
     }
 

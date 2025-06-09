@@ -50,6 +50,7 @@ public class PlayerInteraction : MonoBehaviour
     // "lightSwitcher.IsTurnedOn" (it's check is it dark or not)we can't use anything except light switcher in the dark
     private void Update()
     {
+        //ReleaseItem();
         RaycastHit hit;
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
 
@@ -57,6 +58,7 @@ public class PlayerInteraction : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, rayDistance))
         {
+
             if (hit.collider.CompareTag("Untagged"))
             {
                 if (interactionText != null)
@@ -69,10 +71,10 @@ public class PlayerInteraction : MonoBehaviour
             {
                 if (interactionText != null)
                 {
+                    Debug.Log("Glass");
                     panelWithText.SetActive(true);
-                    interactionText.text = "Get";
+                    interactionText.text = "E - Get";
                 }
-                //можно ли взять стакан если кофе в процессе приготовления
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     heldObject = hit.collider.gameObject;
@@ -92,12 +94,22 @@ public class PlayerInteraction : MonoBehaviour
 
                 }
             }
+            // if (hit.collider.CompareTag("Glass") && isHoldingObject && lightSwitcher.IsTurnedOn)
+            // {
+            //     if (interactionText != null)
+            //     {
+            //         Debug.Log("Glass2");
+            //         panelWithText.SetActive(true);
+            //         interactionText.text = "RMB - Release";
+            //     }
+
+            // }
             else if (hit.collider.CompareTag("Place") && isHoldingObject && lightSwitcher.IsTurnedOn)
             {
                 if (interactionText != null)
                 {
                     panelWithText.SetActive(true);
-                    interactionText.text = "Place";
+                    interactionText.text = "E - Place";
                 }
 
                 if (Input.GetKeyDown(KeyCode.E) && lightSwitcher.IsTurnedOn)
@@ -121,8 +133,9 @@ public class PlayerInteraction : MonoBehaviour
             {
                 if (interactionText != null)
                 {
+                    Debug.Log("Cap");
                     panelWithText.SetActive(true);
-                    interactionText.text = "Get";
+                    interactionText.text = "E - Get";
                 }
 
                 if (Input.GetKeyDown(KeyCode.E))
@@ -139,28 +152,8 @@ public class PlayerInteraction : MonoBehaviour
                     sfx.PlayPaperCollectSound();
                 }
             }
-            else if (hit.collider.CompareTag("StartCoffeeButton") && !isHoldingObject && lightSwitcher.IsTurnedOn)
-            {
-                if (interactionText != null)
-                {
-                    panelWithText.SetActive(true);
-                    interactionText.text = "E";
-                }
-
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    Debug.Log("StartCoffeeButton");
-                    hit.collider.GetComponentInParent<CoffeeMachine>().ToggleState();
-                    panelWithText.SetActive(false);
-                }
-            }
             else if (hit.collider.CompareTag("Cap") && isHoldingObject && lightSwitcher.IsTurnedOn)
             {
-                if (interactionText != null)
-                {
-                    panelWithText.SetActive(true);
-                    interactionText.text = "Put the lid on";
-                }
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     PaperCup paperCup = hit.collider.GetComponent<PaperCup>();
@@ -173,14 +166,30 @@ public class PlayerInteraction : MonoBehaviour
                         isHoldingObject = false;
                         panelWithText.SetActive(false);
                     }
+                    heldObject = hit.collider.gameObject;
+                    holdPoint.transform.position = hit.point;
+                    heldObject.transform.position = holdPoint.transform.position;
+                    heldObject.GetComponent<BoxCollider>().enabled = true;
+                    heldObject.transform.SetParent(holdPoint.transform);
+                    heldObject.transform.rotation = Quaternion.Euler(-90f, 0f, 0f);
+                    isHoldingObject = true;
                 }
-                heldObject = hit.collider.gameObject;
-                holdPoint.transform.position = hit.point;
-                heldObject.transform.position = holdPoint.transform.position;
-                heldObject.GetComponent<BoxCollider>().enabled = true;
-                heldObject.transform.SetParent(holdPoint.transform);
-                heldObject.transform.rotation = Quaternion.Euler(-90f, 0f, 0f);
-                isHoldingObject = true;
+
+            }
+            else if (hit.collider.CompareTag("StartCoffeeButton") && !isHoldingObject && lightSwitcher.IsTurnedOn)
+            {
+                if (interactionText != null)
+                {
+                    panelWithText.SetActive(true);
+                    interactionText.text = "E - Start Coffee";
+                }
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    Debug.Log("StartCoffeeButton");
+                    hit.collider.GetComponentInParent<CoffeeMachine>().ToggleState();
+                    panelWithText.SetActive(false);
+                }
             }
             else if (hit.collider.CompareTag("Lights"))
             {
@@ -200,14 +209,27 @@ public class PlayerInteraction : MonoBehaviour
                 {
                     onPlayerSwitchingLight.Invoke();
                     lightSwitcher.SwitchLight();
+                    Debug.Log("SwitchLight");
                     panelWithText.SetActive(false);
                 }
             }
-            else
+            else if (hit.collider.CompareTag("Surface") && isHoldingObject && lightSwitcher.IsTurnedOn)
             {
+
                 if (interactionText != null)
                 {
-                    panelWithText.SetActive(false);
+                    panelWithText.SetActive(true);
+                    interactionText.text = "E - Put it down";
+                }
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    heldObject.GetComponent<Rigidbody>().isKinematic = false;
+                    heldObject.transform.SetParent(null);
+                    heldObject.transform.position = new Vector3(hit.point.x, hit.point.y + 0.1f, hit.point.z);
+                    heldObject.transform.rotation = Quaternion.Euler(-90f, 0f, 0f);
+                    isHoldingObject = false;
+                    heldObject.GetComponent<BoxCollider>().enabled = true;
+                    heldObject = null;
                 }
             }
         }
@@ -218,10 +240,31 @@ public class PlayerInteraction : MonoBehaviour
                 panelWithText.SetActive(false);
             }
         }
+        if (!lightSwitcher.IsTurnedOn)
+        {
+            if (interactionText != null)
+            {
+                Debug.Log("Turn on the lights");
+                panelWithText.SetActive(true);
+                interactionText.text = "Turn on the lights";
+            }
+        }
         ThrowLogic();
         CupStateChecker();
     }
 
+    private void ReleaseItem()
+    {
+
+        if (heldObject != null && Input.GetMouseButtonDown(1) && lightSwitcher.IsTurnedOn)
+        {
+            heldObject.transform.SetParent(null);
+            heldObject = null;
+            panelWithText.SetActive(false);
+            heldObject.GetComponent<BoxCollider>().enabled = true;
+            heldObject.GetComponent<Rigidbody>().isKinematic = false;
+        }
+    }
     private void ThrowLogic()
     {
         RaycastHit hit;
@@ -235,27 +278,33 @@ public class PlayerInteraction : MonoBehaviour
                 if (interactionText != null)
                 {
                     panelWithText.SetActive(true);
-                    interactionText.text = "Throw";
+                    interactionText.text = "E - Throw";
                 }
 
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    heldObject.transform.SetParent(null);
-                    Rigidbody rb = heldObject.GetComponent<Rigidbody>();
-                    rb.isKinematic = false;
+                    PaperCup paperCup = heldObject.GetComponent<PaperCup>();
 
-                    Vector3 throwDirection = playerCamera.transform.forward;
-                    rb.AddForce(throwDirection * (throwForce / 3f), ForceMode.Impulse);
-
-                    heldObject = null;
-                    isHoldingObject = false;
-                    panelWithText.SetActive(false);
-
-                    if (money != null)
+                    if (paperCup != null && paperCup.IsCoffeeDone)
                     {
-                        money.ShowMoneyText("100", hit.point);
-                        sfx.PlayCoinsSound();
+                        heldObject.transform.SetParent(null);
+                        Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+                        rb.isKinematic = false;
+
+                        Vector3 throwDirection = playerCamera.transform.forward;
+                        rb.AddForce(throwDirection * (throwForce / 3f), ForceMode.Impulse);
+
+                        heldObject = null;
+                        isHoldingObject = false;
+                        panelWithText.SetActive(false);
+
+                        if (money != null)
+                        {
+                            money.ShowMoneyText("100", hit.point);
+                            sfx.PlayCoinsSound();
+                        }
                     }
+
                 }
             }
         }
