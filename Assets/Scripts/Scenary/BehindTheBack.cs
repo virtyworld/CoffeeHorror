@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BehindTheBack : MonoBehaviour
 {
@@ -13,14 +14,30 @@ public class BehindTheBack : MonoBehaviour
     private float currentRotationSpeed;
     private Vector3 originalPosition;
     private bool isMoving = false;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private UnityEvent onMusicValueUp;
+    private UnityEvent onMusicValueDown;
+    private UnityEvent onTurnOnRelaxMusic;
+    private UnityEvent onTurnOffRelaxMusic;
+    private UnityEvent onCafeNoiseVolumeUp;
+    private UnityEvent onCafeNoiseVolumeDown;
+    private bool isScenarioStarted = false;
+    public void Setup(UnityEvent onMusicValueUp, UnityEvent onMusicValueDown, UnityEvent onTurnOnRelaxMusic, UnityEvent onTurnOffRelaxMusic, UnityEvent onCafeNoiseVolumeUp, UnityEvent onCafeNoiseVolumeDown)
     {
-        spawnedObject.SetActive(false);
+        this.onMusicValueUp = onMusicValueUp;
+        this.onMusicValueDown = onMusicValueDown;
+        this.onTurnOnRelaxMusic = onTurnOnRelaxMusic;
+        this.onTurnOffRelaxMusic = onTurnOffRelaxMusic;
+        this.onCafeNoiseVolumeUp = onCafeNoiseVolumeUp;
+        this.onCafeNoiseVolumeDown = onCafeNoiseVolumeDown;
     }
+
     public void StartLogic()
     {
+        isScenarioStarted = true;
+        spawnedObject.SetActive(false);
+        onMusicValueUp?.Invoke();
+        onTurnOffRelaxMusic?.Invoke();
+        onCafeNoiseVolumeDown?.Invoke();
         spawnedObject.SetActive(true);
         previousRotation = camera.transform.eulerAngles.y;
         originalPosition = spawnedObject.transform.position;
@@ -28,6 +45,7 @@ public class BehindTheBack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isScenarioStarted) return;
         // Calculate current rotation speed using camera rotation
         float currentRotation = camera.transform.eulerAngles.y;
         currentRotationSpeed = Mathf.Abs(currentRotation - previousRotation);
@@ -55,6 +73,10 @@ public class BehindTheBack : MonoBehaviour
                 isMoving = false;
                 spawnedObject.transform.position = originalPosition;
                 spawnedObject.SetActive(false);
+                onTurnOnRelaxMusic?.Invoke();
+                onMusicValueDown?.Invoke();
+                onCafeNoiseVolumeUp?.Invoke();
+                isScenarioStarted = false;
             }
         }
     }

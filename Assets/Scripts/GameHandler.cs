@@ -4,27 +4,45 @@ using UnityEngine.Events;
 public class GameHandler : MonoBehaviour
 {
     [SerializeField] private LightSwitcher lightSwitcher;
-    [SerializeField] private GuestReplacer guestReplacer;
+    [SerializeField] private ScenaryHandler scenaryHandler;
     [SerializeField] private PlayerInteraction playerInteraction;
+    [SerializeField] private Music music;
+    [SerializeField] private SFX sfx;
+
+
     private UnityEvent onPlayerSwitchingLight;
     private UnityEvent onTurnOffLight;
     private UnityEvent onTurnAllLightsRed;
     private UnityEvent onTurnAllLightsWhite;
+    private UnityEvent onTurnOnRelaxMusic;
+    private UnityEvent onTurnOffRelaxMusic;
+    private UnityEvent onMusicValueUp;
+    private UnityEvent onMusicValueDown;
+    private UnityEvent onCafeNoiseVolumeUp;
+    private UnityEvent onCafeNoiseVolumeDown;
+
     void Awake()
     {
         InitEvents();
         InitLightSwitcher();
-        InitGuestReplacer();
+        InitScenary();
         InitPlayerInteraction();
+        InitMusic();
+        InitSFX();
     }
 
     private void InitEvents()
     {
-        Debug.Log("InitEvents");
         onPlayerSwitchingLight = new UnityEvent();
         onTurnOffLight = new UnityEvent();
         onTurnAllLightsRed = new UnityEvent();
         onTurnAllLightsWhite = new UnityEvent();
+        onTurnOnRelaxMusic = new UnityEvent();
+        onTurnOffRelaxMusic = new UnityEvent();
+        onMusicValueUp = new UnityEvent();
+        onMusicValueDown = new UnityEvent();
+        onCafeNoiseVolumeUp = new UnityEvent();
+        onCafeNoiseVolumeDown = new UnityEvent();
     }
 
     private void InitLightSwitcher()
@@ -32,14 +50,26 @@ public class GameHandler : MonoBehaviour
         lightSwitcher.Setup(onTurnOffLight, onTurnAllLightsRed, onTurnAllLightsWhite);
     }
 
-    private void InitGuestReplacer()
+    private void InitScenary()
     {
-        guestReplacer.Setup(onPlayerSwitchingLight, onTurnOffLight, onTurnAllLightsRed, onTurnAllLightsWhite);
+        scenaryHandler.Setup(onMusicValueUp, onMusicValueDown, onTurnOnRelaxMusic, onTurnOffRelaxMusic,
+        onCafeNoiseVolumeUp, onCafeNoiseVolumeDown, onPlayerSwitchingLight, onTurnOffLight, onTurnAllLightsRed,
+        onTurnAllLightsWhite);
     }
 
     private void InitPlayerInteraction()
     {
         playerInteraction.Setup(onPlayerSwitchingLight);
+    }
+
+    private void InitMusic()
+    {
+        music.Setup(onTurnOnRelaxMusic, onTurnOffRelaxMusic, onMusicValueUp, onMusicValueDown);
+    }
+
+    private void InitSFX()
+    {
+        sfx.Setup(onCafeNoiseVolumeUp, onCafeNoiseVolumeDown);
     }
 
 }

@@ -10,13 +10,27 @@ public class GuestReplacer : MonoBehaviour
     private UnityEvent onTurnOffLight;
     private UnityEvent onTurnAllLightsRed;
     private UnityEvent onTurnAllLightsWhite;
-
-    public void Setup(UnityEvent onPlayerSwitchingLight, UnityEvent onTurnOffLight, UnityEvent onTurnAllLightsRed, UnityEvent onTurnAllLightsWhite)
+    private UnityEvent onMusicValueUp;
+    private UnityEvent onMusicValueDown;
+    private UnityEvent onTurnOnRelaxMusic;
+    private UnityEvent onTurnOffRelaxMusic;
+    private UnityEvent onCafeNoiseVolumeUp;
+    private UnityEvent onCafeNoiseVolumeDown;
+    private bool isSceneStarted = false;
+    public void Setup(UnityEvent onPlayerSwitchingLight, UnityEvent onTurnOffLight, UnityEvent onTurnAllLightsRed,
+    UnityEvent onTurnAllLightsWhite, UnityEvent onMusicValueUp, UnityEvent onMusicValueDown, UnityEvent onTurnOnRelaxMusic,
+     UnityEvent onTurnOffRelaxMusic, UnityEvent onCafeNoiseVolumeUp, UnityEvent onCafeNoiseVolumeDown)
     {
         onPlayerSwitchingLight.AddListener(ActivateScenario);
         this.onTurnOffLight = onTurnOffLight;
         this.onTurnAllLightsRed = onTurnAllLightsRed;
         this.onTurnAllLightsWhite = onTurnAllLightsWhite;
+        this.onMusicValueUp = onMusicValueUp;
+        this.onMusicValueDown = onMusicValueDown;
+        this.onTurnOnRelaxMusic = onTurnOnRelaxMusic;
+        this.onTurnOffRelaxMusic = onTurnOffRelaxMusic;
+        this.onCafeNoiseVolumeUp = onCafeNoiseVolumeUp;
+        this.onCafeNoiseVolumeDown = onCafeNoiseVolumeDown;
     }
     void Start()
     {
@@ -25,12 +39,17 @@ public class GuestReplacer : MonoBehaviour
 
     public void StartLogic()
     {
+        isSceneStarted = true;
         onTurnOffLight.Invoke();
     }
     public void ActivateScenario()
     {
+        if (!isSceneStarted) return;
         Debug.Log("StartLogic GuestReplacer");
         onTurnAllLightsRed.Invoke();
+        onMusicValueUp.Invoke();
+        onCafeNoiseVolumeDown.Invoke();
+        onTurnOffRelaxMusic.Invoke();
         ReplaceGuests();
         if (replaceBackCoroutine != null)
         {
@@ -45,6 +64,9 @@ public class GuestReplacer : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         onTurnAllLightsWhite.Invoke();
+        onMusicValueDown.Invoke();
+        onCafeNoiseVolumeUp.Invoke();
+        onTurnOnRelaxMusic.Invoke();
         ReplaceGuestsBack();
     }
 

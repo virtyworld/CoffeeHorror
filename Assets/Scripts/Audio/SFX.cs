@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class SFX : MonoBehaviour
 {
@@ -9,8 +10,17 @@ public class SFX : MonoBehaviour
     [SerializeField] private AudioSource coinsSFX;
     [SerializeField] private AudioSource lightSwitchOnSFX;
     [SerializeField] private AudioSource lightSwitchOffSFX;
+    [SerializeField] private AudioSource cafeNoiseSFX;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    public void Setup(UnityEvent onCafeNoiseVolumeUp, UnityEvent onCafeNoiseVolumeDown)
+    {
+        Debug.Log("Setup SFX");
+        Debug.Log(onCafeNoiseVolumeDown);
+        onCafeNoiseVolumeUp.AddListener(CafeNoiseVolumeUp);
+        onCafeNoiseVolumeDown.AddListener(CafeNoiseVolumeDown);
+    }
+
     void Start()
     {
 
@@ -96,5 +106,15 @@ public class SFX : MonoBehaviour
         {
             lightSwitchOffSFX.Play();
         }
+    }
+    private void CafeNoiseVolumeUp()
+    {
+        Debug.Log("CafeNoiseVolumeUp");
+        cafeNoiseSFX.volume = 0.2f;
+    }
+    private void CafeNoiseVolumeDown()
+    {
+        Debug.Log("CafeNoiseVolumeDown");
+        cafeNoiseSFX.volume = 0f;
     }
 }
