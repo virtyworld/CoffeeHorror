@@ -1,5 +1,21 @@
 using UnityEngine;
 
+/// <summary>
+/// PlayerMovement - First-Person Character Controller
+/// 
+/// Main Logic:
+/// This script handles the player's movement and camera rotation in first-person view.
+/// It provides smooth character movement using Rigidbody physics and mouse-look
+/// functionality for camera rotation. The movement system uses velocity-based
+/// physics for realistic movement while maintaining smooth camera control.
+/// 
+/// Key Features:
+/// - WASD movement with configurable speed
+/// - Mouse-look camera rotation with sensitivity control
+/// - Physics-based movement using Rigidbody
+/// - Smooth movement interpolation
+/// - Collision detection for realistic movement
+/// </summary>
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 2f;
@@ -9,7 +25,10 @@ public class PlayerMovement : MonoBehaviour
     private CameraHandler cameraHandler;
     private Vector3 moveDirection;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    /// <summary>
+    /// Initializes the player movement system
+    /// Sets up Rigidbody physics and camera handler for smooth movement
+    /// </summary>
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -21,11 +40,18 @@ public class PlayerMovement : MonoBehaviour
         rb.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
+    /// <summary>
+    /// Update method - currently unused but available for future input processing
+    /// </summary>
     void Update()
     {
 
     }
 
+    /// <summary>
+    /// Handles physics-based movement and camera rotation
+    /// Processes input for movement and rotation, applies physics-based movement
+    /// </summary>
     void FixedUpdate()
     {
         // Handle movement input

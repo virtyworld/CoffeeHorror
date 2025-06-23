@@ -3,6 +3,22 @@ using TMPro;
 using System.Runtime.CompilerServices;
 using System.Collections;
 
+/// <summary>
+/// Money - UI Money Display System
+/// 
+/// Main Logic:
+/// This script manages the visual display of money earned in the game. It creates
+/// animated text that appears at world positions, moves upward, and fades out.
+/// The system converts world coordinates to screen coordinates and provides smooth
+/// animations for money notifications when players complete tasks like serving coffee.
+/// 
+/// Key Features:
+/// - World-to-screen coordinate conversion
+/// - Animated text movement and fading
+/// - Coroutine-based smooth animations
+/// - Automatic text cleanup
+/// - Configurable animation parameters
+/// </summary>
 public class Money : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI moneyText;
@@ -16,6 +32,10 @@ public class Money : MonoBehaviour
     private Color startColor;
     private Coroutine currentAnimation;
 
+    /// <summary>
+    /// Initializes the money display system
+    /// Sets up initial colors and finds required components
+    /// </summary>
     void Start()
     {
         startColor = moneyText.color;
@@ -26,6 +46,12 @@ public class Money : MonoBehaviour
         DisableText();
     }
 
+    /// <summary>
+    /// Shows animated money text at a specific world position
+    /// Converts world coordinates to screen coordinates and starts the animation
+    /// </summary>
+    /// <param name="text">The text to display (usually money amount)</param>
+    /// <param name="worldPosition">The world position where the text should appear</param>
     public void ShowMoneyText(string text, Vector3 worldPosition)
     {
         if (currentAnimation != null)
@@ -43,6 +69,11 @@ public class Money : MonoBehaviour
         currentAnimation = StartCoroutine(AnimateText());
     }
 
+    /// <summary>
+    /// Coroutine that animates the money text movement and fading
+    /// Moves the text upward while gradually fading it out
+    /// </summary>
+    /// <returns>IEnumerator for coroutine execution</returns>
     private IEnumerator AnimateText()
     {
         float elapsedTime = 0f;
@@ -68,6 +99,10 @@ public class Money : MonoBehaviour
         DisableText();
     }
 
+    /// <summary>
+    /// Disables the money text display
+    /// Hides the text and cleans up the display
+    /// </summary>
     private void DisableText()
     {
         moneyText.gameObject.SetActive(false);

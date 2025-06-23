@@ -1,5 +1,22 @@
 using UnityEngine;
 
+/// <summary>
+/// Cap - Coffee Cup Cap Attachment System
+/// 
+/// Main Logic:
+/// This script manages the automatic attachment of caps to coffee cups. It detects
+/// when a cap is near a completed coffee cup and automatically attaches it with
+/// smooth animations. The attachment process includes a two-phase animation:
+/// first moving up, then attaching to the cup's snap point with proper rotation.
+/// 
+/// Key Features:
+/// - Automatic cap detection and attachment
+/// - Two-phase attachment animation (up then attach)
+/// - Physics-based proximity detection
+/// - Smooth position and rotation interpolation
+/// - Automatic physics component disabling after attachment
+/// - Integration with player interaction system
+/// </summary>
 public class Cap : MonoBehaviour
 {
     [SerializeField] private PlayerInteraction playerInteraction;
@@ -16,13 +33,20 @@ public class Cap : MonoBehaviour
     private bool isMovingUp = true;
     public bool isOnTheCup = false;
 
+    /// <summary>
+    /// Initializes the cap system
+    /// Stores the initial position for attachment animations
+    /// </summary>
     void Start()
     {
         // Store initial position when attachment starts
         initialPosition = transform.position;
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Main update loop that handles cap attachment logic
+    /// Manages the two-phase attachment animation and proximity detection
+    /// </summary>
     void Update()
     {
         if (isAttaching && !isOnTheCup)

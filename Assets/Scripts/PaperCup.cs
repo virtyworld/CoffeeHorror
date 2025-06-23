@@ -1,6 +1,23 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// PaperCup - Coffee Cup State Management System
+/// 
+/// Main Logic:
+/// This script manages the visual state and coffee filling animation of paper cups.
+/// It controls the coffee appearance, provides snap points for caps, and handles
+/// the coffee brewing animation with smooth scaling and positioning transitions.
+/// The system tracks various states including coffee completion and cap attachment.
+/// 
+/// Key Features:
+/// - Coffee filling animation with smooth transitions
+/// - Snap point management for cap attachment
+/// - State tracking for coffee completion
+/// - Visual feedback through coffee appearance
+/// - Sound effect integration during coffee brewing
+/// - Configurable animation parameters
+/// </summary>
 public class PaperCup : MonoBehaviour
 {
     [SerializeField] private GameObject paperCup;
@@ -27,6 +44,10 @@ public class PaperCup : MonoBehaviour
     public bool isCofeeInProgress = false;
     private BoxCollider boxCollider;
 
+    /// <summary>
+    /// Initializes the paper cup system
+    /// Sets up components and starts with coffee disabled
+    /// </summary>
     void Start()
     {
         coffeeMeshRenderer = coffee.GetComponent<MeshRenderer>();
@@ -34,15 +55,29 @@ public class PaperCup : MonoBehaviour
         DisableCoffee();
     }
 
+    /// <summary>
+    /// Hides the coffee visual element
+    /// Used when the cup is empty
+    /// </summary>
     private void DisableCoffee()
     {
         coffee.SetActive(false);
     }
+
+    /// <summary>
+    /// Shows the coffee visual element
+    /// Used when coffee brewing starts
+    /// </summary>
     private void EnableCoffee()
     {
         coffee.SetActive(true);
     }
 
+    /// <summary>
+    /// Coroutine that handles the coffee filling animation
+    /// Smoothly scales and positions the coffee visual from empty to full
+    /// </summary>
+    /// <returns>IEnumerator for coroutine execution</returns>
     private IEnumerator ChangeCoffeeCoroutine()
     {
         if (coffee == null)
@@ -99,6 +134,10 @@ public class PaperCup : MonoBehaviour
         isCofeeInProgress = false;
     }
 
+    /// <summary>
+    /// Starts the coffee brewing process
+    /// Initiates the coffee filling animation and plays sound effects
+    /// </summary>
     public void StartCoffeeChange()
     {
         Debug.Log("StartCoffeeChange");

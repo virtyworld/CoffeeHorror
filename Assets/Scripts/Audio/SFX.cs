@@ -1,6 +1,21 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// SFX (Sound Effects) Manager
+/// 
+/// Main Logic:
+/// This script manages all sound effects in the game. It provides methods to play and stop
+/// various audio clips for different game events like coffee machine sounds, coin collection,
+/// light switches, and ambient cafe noise. It also handles volume control for cafe background noise
+/// through UnityEvents that can be triggered by other game systems.
+/// 
+/// Key Features:
+/// - Centralized sound effect management
+/// - Volume control for ambient cafe noise
+/// - Event-driven audio system integration
+/// - Null safety checks for all audio sources
+/// </summary>
 public class SFX : MonoBehaviour
 {
     [SerializeField] private AudioSource coffeeMachineSFX;
@@ -12,7 +27,11 @@ public class SFX : MonoBehaviour
     [SerializeField] private AudioSource lightSwitchOffSFX;
     [SerializeField] private AudioSource cafeNoiseSFX;
 
-
+    /// <summary>
+    /// Initializes the SFX system by subscribing to cafe noise volume control events
+    /// </summary>
+    /// <param name="onCafeNoiseVolumeUp">Event triggered when cafe noise volume should increase</param>
+    /// <param name="onCafeNoiseVolumeDown">Event triggered when cafe noise volume should decrease</param>
     public void Setup(UnityEvent onCafeNoiseVolumeUp, UnityEvent onCafeNoiseVolumeDown)
     {
         Debug.Log("Setup SFX");
@@ -32,6 +51,9 @@ public class SFX : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Plays the coffee machine sound effect
+    /// </summary>
     public void PlayCoffeeMachineSound()
     {
         if (coffeeMachineSFX != null)
@@ -44,6 +66,9 @@ public class SFX : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Stops the coffee machine sound effect
+    /// </summary>
     public void StopCoffeeMachineSound()
     {
         if (coffeeMachineSFX != null)
@@ -52,6 +77,9 @@ public class SFX : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Plays the coffee drip sound effect with increased pitch (2x speed)
+    /// </summary>
     public void PlayCoffeeDreepSound()
     {
         if (coffeeDreepSFX != null)
@@ -64,6 +92,10 @@ public class SFX : MonoBehaviour
             Debug.LogWarning("Coffee dreep sound effect AudioSource is not assigned!");
         }
     }
+
+    /// <summary>
+    /// Plays the paper collection sound effect
+    /// </summary>
     public void PlayPaperCollectSound()
     {
         if (paperCollectSFX != null)
@@ -75,6 +107,10 @@ public class SFX : MonoBehaviour
             Debug.LogWarning("Coffee dreep sound effect AudioSource is not assigned!");
         }
     }
+
+    /// <summary>
+    /// Plays the paper placement/cap attachment sound effect
+    /// </summary>
     public void PlayPaperPlaceSound()
     {
         if (capAttachSFX != null)
@@ -86,6 +122,10 @@ public class SFX : MonoBehaviour
             Debug.LogWarning("Paper place sound effect AudioSource is not assigned!");
         }
     }
+
+    /// <summary>
+    /// Plays the coin collection sound effect
+    /// </summary>
     public void PlayCoinsSound()
     {
         if (coinsSFX != null)
@@ -93,6 +133,10 @@ public class SFX : MonoBehaviour
             coinsSFX.Play();
         }
     }
+
+    /// <summary>
+    /// Plays the light switch turn on sound effect
+    /// </summary>
     public void PlayLightSwitchOnSound()
     {
         if (lightSwitchOnSFX != null)
@@ -100,6 +144,10 @@ public class SFX : MonoBehaviour
             lightSwitchOnSFX.Play();
         }
     }
+
+    /// <summary>
+    /// Plays the light switch turn off sound effect
+    /// </summary>
     public void PlayLightSwitchOffSound()
     {
         if (lightSwitchOffSFX != null)
@@ -107,11 +155,19 @@ public class SFX : MonoBehaviour
             lightSwitchOffSFX.Play();
         }
     }
+
+    /// <summary>
+    /// Increases cafe background noise volume to 0.2
+    /// </summary>
     private void CafeNoiseVolumeUp()
     {
         Debug.Log("CafeNoiseVolumeUp");
         cafeNoiseSFX.volume = 0.2f;
     }
+
+    /// <summary>
+    /// Mutes cafe background noise volume to 0
+    /// </summary>
     private void CafeNoiseVolumeDown()
     {
         Debug.Log("CafeNoiseVolumeDown");

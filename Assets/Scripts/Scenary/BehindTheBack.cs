@@ -1,6 +1,16 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// BehindTheBack - Horror scenario script that spawns a monster behind the player
+/// 
+/// Main Logic:
+/// - Tracks camera rotation to detect when player looks away
+/// - When player rotates beyond threshold, spawns monster in front of camera
+/// - Controls audio transitions (music, cafe noise) during the scenario
+/// - Monster moves back to original position when scenario ends
+/// - Creates jump-scare effect by appearing when player turns back
+/// </summary>
 public class BehindTheBack : MonoBehaviour
 {
     [SerializeField] private GameObject spawnedObject; // The crab object
@@ -24,6 +34,17 @@ public class BehindTheBack : MonoBehaviour
     private UnityEvent onCafeNoiseVolumeDown;
     private bool isScenarioStarted = false;
     private GameObject newObject;
+
+    /// <summary>
+    /// Initializes the script with audio control events
+    /// Called externally to set up audio transitions for the horror scenario
+    /// </summary>
+    /// <param name="onMusicValueUp">Event to increase main music volume</param>
+    /// <param name="onMusicValueDown">Event to decrease main music volume</param>
+    /// <param name="onTurnOnRelaxMusic">Event to enable relaxing music</param>
+    /// <param name="onTurnOffRelaxMusic">Event to disable relaxing music</param>
+    /// <param name="onCafeNoiseVolumeUp">Event to increase cafe ambient noise</param>
+    /// <param name="onCafeNoiseVolumeDown">Event to decrease cafe ambient noise</param>
     public void Setup(UnityEvent onMusicValueUp, UnityEvent onMusicValueDown, UnityEvent onTurnOnRelaxMusic, UnityEvent onTurnOffRelaxMusic, UnityEvent onCafeNoiseVolumeUp, UnityEvent onCafeNoiseVolumeDown)
     {
         this.onMusicValueUp = onMusicValueUp;
@@ -33,11 +54,24 @@ public class BehindTheBack : MonoBehaviour
         this.onCafeNoiseVolumeUp = onCafeNoiseVolumeUp;
         this.onCafeNoiseVolumeDown = onCafeNoiseVolumeDown;
     }
+
+    /// <summary>
+    /// Initializes the original position and rotation of the monster object
+    /// Called once when the script starts
+    /// </summary>
     void Start()
     {
         originalPosition = new Vector3(0, 0, 0);
         originalRotation = spawnedObject.transform.rotation;
     }
+
+    /// <summary>
+    /// Starts the horror scenario sequence
+    /// - Activates the scenario tracking
+    /// - Changes audio to create tension (increases music, decreases cafe noise)
+    /// - Records initial camera rotation for tracking
+    /// - Shows the original monster object
+    /// </summary>
     public void StartLogic()
     {
         isScenarioStarted = true;
@@ -50,7 +84,16 @@ public class BehindTheBack : MonoBehaviour
         spawnedObject.transform.localPosition = originalPosition;
         Debug.Log("originalPosition " + originalPosition);
     }
-    // Update is called once per frame
+
+    /// <summary>
+    /// Main update loop that handles the horror scenario logic
+    /// 
+    /// Core functionality:
+    /// 1. Tracks camera rotation to detect when player looks away
+    /// 2. When rotation threshold is exceeded, spawns monster in front of player
+    /// 3. Moves spawned monster back to original position
+    /// 4. Ends scenario and restores normal audio when monster returns
+    /// </summary>
     void Update()
     {
         if (!isScenarioStarted) return;
